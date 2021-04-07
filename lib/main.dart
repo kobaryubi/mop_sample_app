@@ -33,15 +33,28 @@ class _HelloState extends State<HelloPage> {
       ),
       body: Center(
         child: Container(
-          color: Colors.greenAccent,
-          height: 400.0,
-          width: 300.0,
-          child: Center(
-            child: Text(
-              "Hello!",
-              style: TextStyle(fontSize: 40.0),
-              textAlign: TextAlign.center,
-            ),
+          child: Column(
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Text(
+                      "Hello!",
+                      style: TextStyle(fontSize: 40.0),
+                      textAlign: TextAlign.center,
+                    ),
+                  )
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    // TODO: Add Menu Buttons
+                    child: ElevatedButton(),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
