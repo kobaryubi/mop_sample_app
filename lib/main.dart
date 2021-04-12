@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import './category_page.dart';
+
 void main() {
   runApp(MopSampleApp());
 }
@@ -50,13 +52,28 @@ class _HelloState extends State<HelloPage> {
                 children: <Widget>[
                   Expanded(
                     // TODO: Add Menu Buttons
-                    child: ElevatedButton(),
+                    child: ElevatedButton(
+                      onPressed: onPressed,
+                    ),
                   ),
                 ],
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Future<void> onPressed() async {
+    final _categoryName = "Cake";
+    final _categoryIcon = Icons.cake;
+    final _categoryColor = Colors.green;
+
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CategoryPage(),
       ),
     );
   }
