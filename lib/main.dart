@@ -54,6 +54,7 @@ class _HelloState extends State<HelloPage> {
                     // TODO: Add Menu Buttons
                     child: ElevatedButton(
                       onPressed: onPressed,
+                      child: Text("Category Page"),
                     ),
                   ),
                 ],
@@ -73,7 +74,11 @@ class _HelloState extends State<HelloPage> {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => CategoryPage(),
+        builder: (context) => CategoryPage(
+          name: _categoryName,
+          color: _categoryColor,
+          iconLocation: _categoryIcon,
+        ),
       ),
     );
   }
