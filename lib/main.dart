@@ -13,19 +13,29 @@ class MopSampleApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Hello Page',
+      theme: ThemeData(
+        textTheme: Theme.of(context).textTheme.apply(
+          bodyColor: Colors.black,
+          displayColor: Colors.grey[600],
+        ),
+        primaryColor: Colors.grey[500],
+        textSelectionTheme: TextSelectionThemeData(
+          selectionHandleColor: Colors.green[500],
+        )
+      ),
       home: HelloPageRoute(),
     );
   }
 }
 
 class HelloPageRoute extends StatefulWidget {
-  HelloPageRoute({Key key}) : super(key: key);
+  const HelloPageRoute();
 
   @override
-  _HelloState createState() => _HelloState();
+  _HelloPageRouteState createState() => _HelloPageRouteState();
 }
 
-class _HelloState extends State<HelloPageRoute> {
+class _HelloPageRouteState extends State<HelloPageRoute> {
 
   @override
   Widget build(BuildContext context) {
