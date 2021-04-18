@@ -44,8 +44,8 @@ class CategoryWidget extends StatelessWidget {
         height: _rowHeight,
         child: InkWell(
           borderRadius: _borderRadius,
-          highlightColor: color,
-          splashColor: color,
+          highlightColor: color["highlight"],
+          splashColor: color["splash"],
           onTap: () => _navigateToConverterPageRoute(context),
           child: Padding(
             padding: EdgeInsets.all(8.0),
