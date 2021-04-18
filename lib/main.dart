@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import './category_page.dart';
+import './category_list_page_route.dart';
 
 void main() {
   runApp(MopSampleApp());
@@ -13,19 +13,19 @@ class MopSampleApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Hello Page',
-      home: HelloPage(),
+      home: HelloPageRoute(),
     );
   }
 }
 
-class HelloPage extends StatefulWidget {
-  HelloPage({Key key}) : super(key: key);
+class HelloPageRoute extends StatefulWidget {
+  HelloPageRoute({Key key}) : super(key: key);
 
   @override
   _HelloState createState() => _HelloState();
 }
 
-class _HelloState extends State<HelloPage> {
+class _HelloState extends State<HelloPageRoute> {
 
   @override
   Widget build(BuildContext context) {
@@ -67,18 +67,10 @@ class _HelloState extends State<HelloPage> {
   }
 
   Future<void> onPressed() async {
-    final _categoryName = "Cake";
-    final _categoryIcon = Icons.cake;
-    final _categoryColor = Colors.green;
-
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => CategoryPage(
-          name: _categoryName,
-          color: _categoryColor,
-          iconLocation: _categoryIcon,
-        ),
+        builder: (context) => CategoryListPageRoute(),
       ),
     );
   }
