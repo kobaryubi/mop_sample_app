@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import './category_list_page_route.dart';
+import './category_route.dart';
+import './animation_route.dart';
 
 void main() {
   runApp(MopSampleApp());
@@ -14,15 +15,14 @@ class MopSampleApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Hello Page',
       theme: ThemeData(
-        textTheme: Theme.of(context).textTheme.apply(
-          bodyColor: Colors.black,
-          displayColor: Colors.grey[600],
-        ),
-        primaryColor: Colors.grey[500],
-        textSelectionTheme: TextSelectionThemeData(
-          selectionHandleColor: Colors.green[500],
-        )
-      ),
+          textTheme: Theme.of(context).textTheme.apply(
+                bodyColor: Colors.black,
+                displayColor: Colors.grey[600],
+              ),
+          primaryColor: Colors.grey[500],
+          textSelectionTheme: TextSelectionThemeData(
+            selectionHandleColor: Colors.green[500],
+          )),
       home: HelloPageRoute(),
     );
   }
@@ -36,7 +36,6 @@ class HelloPageRoute extends StatefulWidget {
 }
 
 class _HelloPageRouteState extends State<HelloPageRoute> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,8 +62,18 @@ class _HelloPageRouteState extends State<HelloPageRoute> {
                   Expanded(
                     // TODO: Add Menu Buttons
                     child: ElevatedButton(
-                      onPressed: onPressed,
-                      child: Text("Category Page"),
+                      onPressed: onCategoryRoutePressed,
+                      child: Text("Category Route"),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: onAnimationRoutePressed,
+                      child: Text("Animation Route"),
                     ),
                   ),
                 ],
@@ -76,11 +85,20 @@ class _HelloPageRouteState extends State<HelloPageRoute> {
     );
   }
 
-  Future<void> onPressed() async {
+  Future<void> onCategoryRoutePressed() async {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => CategoryListPageRoute(),
+        builder: (context) => CategoryRoute(),
+      ),
+    );
+  }
+
+  Future<void> onAnimationRoutePressed() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AnimationRoute(),
       ),
     );
   }
