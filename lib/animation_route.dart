@@ -1,21 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
 
-class AnimatedLogo extends AnimatedWidget {
-  AnimatedLogo({Key? key, required Animation<double> animation})
-      : super(key: key, listenable: animation);
+class LogoWidget extends StatelessWidget {
+  Widget build(BuildContext context) => Container(
+    margin: EdgeInsets.symmetric(vertical: 10),
+    child: FlutterLogo(),
+  );
+}
 
-  Widget build(BuildContext context) {
-    final animation = listenable as Animation<double>;
-    return Center(
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 10),
+class GrowTransition extends StatelessWidget {
+  GrowTransition({
+    required this.child,
+    required this.animation
+});
+  final Widget child;
+  final Animation<double> animation;
+
+  Widget build(BuildContext context) => Center(
+    child: AnimatedBuilder(
+      animation: animation,
+      builder: (context, child) => Container(
         height: animation.value,
         width: animation.value,
-        child: FlutterLogo(),
+        child: child,
       ),
-    );
-  }
+      child: child,
+    ),
+  );
 }
 
 class AnimationRoute extends StatefulWidget {
@@ -54,13 +65,16 @@ class _AnimationRouteState extends State<AnimationRoute>
 
   @override
   Widget build(BuildContext context) {
-    AnimatedLogo animatedLogo = AnimatedLogo(animation: animation);
+    GrowTransition growTransition = GrowTransition(
+      child: LogoWidget(),
+      animation: animation,
+    );
 
     return Scaffold(
       appBar: AppBar(
         title: Text("Animation Route"),
       ),
-      body: animatedLogo,
+      body: growTransition,
     );
   }
 
