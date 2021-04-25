@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
 
 class AnimatedLogo extends AnimatedWidget {
-  AnimatedLogo({
-    Key? key,
-    required Animation<double> animation
-  }) : super(key: key, listenable: animation);
+  AnimatedLogo({Key? key, required Animation<double> animation})
+      : super(key: key, listenable: animation);
 
   Widget build(BuildContext context) {
     final animation = listenable as Animation<double>;
@@ -40,6 +38,16 @@ class _AnimationRouteState extends State<AnimationRoute>
     animation = Tween<double>(begin: 0, end: 300).animate(controller)
       ..addListener(() {
         setState(() {});
+      })
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          controller.reverse();
+        } else if (status == AnimationStatus.dismissed) {
+          controller.forward();
+        }
+      })
+      ..addStatusListener((status) {
+        print('$status');
       });
     controller.forward();
   }
