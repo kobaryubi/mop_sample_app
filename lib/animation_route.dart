@@ -1,32 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
 
-class LogoWidget extends StatelessWidget {
-  Widget build(BuildContext context) => Container(
-    margin: EdgeInsets.symmetric(vertical: 10),
-    child: FlutterLogo(),
-  );
-}
+class AnimatedLogo extends AnimatedWidget {
+  static final _opacityTween = Tween<double>(begin: 0.1, end: 1);
+  static final _sizeTween = Tween<double>(begin: 0, end: 300);
 
-class GrowTransition extends StatelessWidget {
-  GrowTransition({
-    required this.child,
-    required this.animation
-});
-  final Widget child;
-  final Animation<double> animation;
+  AnimatedLogo({Key? key, required Animation<double> animation})
+      : super(key: key, listenable: animation);
 
-  Widget build(BuildContext context) => Center(
-    child: AnimatedBuilder(
-      animation: animation,
-      builder: (context, child) => Container(
-        height: animation.value,
-        width: animation.value,
-        child: child,
+  Widget build(BuildContext context) {
+    final animation = listenable as Animation<double>;
+    return Center(
+      child: Opacity(
+        opacity: _opacityTween.evaluate(animation),
+        child: Container(
+          margin: EdgeInsets.symmetric(vertical: 10),
+          height: _sizeTween.evaluate(animation),
+          width: _sizeTween.evaluate(animation),
+          child: FlutterLogo(),
+        ),
       ),
-      child: child,
-    ),
-  );
+    );
+  }
 }
 
 class AnimationRoute extends StatefulWidget {
@@ -46,7 +41,7 @@ class _AnimationRouteState extends State<AnimationRoute>
     super.initState();
     controller =
         AnimationController(vsync: this, duration: const Duration(seconds: 2));
-    animation = Tween<double>(begin: 0, end: 300).animate(controller)
+    animation = CurvedAnimation(parent: controller, curve: Curves.easeIn)
       ..addListener(() {
         setState(() {});
       })
@@ -65,16 +60,11 @@ class _AnimationRouteState extends State<AnimationRoute>
 
   @override
   Widget build(BuildContext context) {
-    GrowTransition growTransition = GrowTransition(
-      child: LogoWidget(),
-      animation: animation,
-    );
-
     return Scaffold(
       appBar: AppBar(
         title: Text("Animation Route"),
       ),
-      body: growTransition,
+      body: AnimatedLogo(animation: animation),
     );
   }
 
