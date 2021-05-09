@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import './category_route.dart';
 import './animation_route.dart';
+import './gesture_route.dart';
 
 void main() {
   runApp(MopSampleApp());
@@ -73,7 +74,17 @@ class _HelloPageRouteState extends State<HelloPageRoute> {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: onAnimationRoutePressed,
-                      child: Text("Animation Route"),
+                      child: Text('Animation Route'),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: onGestureRoutePressed,
+                      child: Text('Gesture Route'),
                     ),
                   ),
                 ],
@@ -99,6 +110,15 @@ class _HelloPageRouteState extends State<HelloPageRoute> {
       context,
       MaterialPageRoute(
         builder: (context) => AnimationRoute(),
+      ),
+    );
+  }
+
+  Future<void> onGestureRoutePressed() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => GestureRoute(),
       ),
     );
   }
