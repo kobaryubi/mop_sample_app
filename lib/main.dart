@@ -5,6 +5,7 @@ import './animation_route.dart';
 import './gesture_route.dart';
 import './logger_route.dart';
 import './grid_route.dart';
+import './key_route.dart';
 
 void main() {
   runApp(MopSampleApp());
@@ -111,6 +112,16 @@ class _HelloPageRouteState extends State<HelloPageRoute> {
                   ),
                 ],
               ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: onKeyRoutePressed,
+                      child: Text('Key Route'),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
@@ -159,6 +170,15 @@ class _HelloPageRouteState extends State<HelloPageRoute> {
       context,
       MaterialPageRoute(
         builder: (context) => GridRoute(),
+      ),
+    );
+  }
+
+  Future<void> onKeyRoutePressed() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => KeyRoute(),
       ),
     );
   }
