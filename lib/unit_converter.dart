@@ -1,40 +1,58 @@
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 
 import './unit.dart';
+import './category.dart';
+
 
 const _padding = EdgeInsets.all(16.0);
 
-class ConverterPageRoute extends StatefulWidget {
-  final String name;
-  final ColorSwatch color;
-  final List<Unit> units;
+class UnitConverter extends StatefulWidget {
+  final Category category;
 
-  const ConverterPageRoute({
-    Key key,
-    @required this.name,
-    @required this.color,
-    @required this.units,
-  })  : assert(name != null),
-        assert(color != null),
-        assert(units != null),
-        super(key: key);
+  const UnitConverter({
+    required this.category,
+  }) : assert(category != null);
 
   @override
-  _ConverterPageRouteState createState() => _ConverterPageRouteState();
+  _UnitConverterState createState() => _UnitConverterState();
 }
 
-class _ConverterPageRouteState extends State<ConverterPageRoute> {
-  Unit _fromValue;
-  Unit _toValue;
-  List<DropdownMenuItem> _unitMenuItems;
-  double _inputValue;
-  String _convertedValue = "";
+class _UnitConverterState extends State<UnitConverter> {
+  late Unit _fromValue;
+  late Unit _toValue;
+  late double _inputValue;
+  String _convertedValue = '';
+  late List<DropdownMenuItem> _unitMenuItems;
   bool _showValidationError = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _createDropdownMenuItems();
+    _setDefaults();
+  }
+
+  Unit _getUnit(String unitName) {
+    return widget.category.units.firstWhere(
+          (Unit unit) {
+        return unit.name == unitName;
+      },
+      orElse: null,
+    );
+  }
+
+  @override
+  void didUpdateWidget(UnitConverter old) {
+    super.didUpdateWidget(old);
+    if (old.category != widget.category) {
+      _createDropdownMenuItems();
+      _setDefaults();
+    }
+  }
 
   void _createDropdownMenuItems() {
     var newItems = <DropdownMenuItem>[];
-    for (var unit in widget.units) {
+    for (var unit in widget.category.units) {
       newItems.add(DropdownMenuItem(
         value: unit.name,
         child: Container(
@@ -50,18 +68,26 @@ class _ConverterPageRouteState extends State<ConverterPageRoute> {
     });
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _createDropdownMenuItems();
-    _setDefaults();
-  }
-
   void _setDefaults() {
     setState(() {
-      _fromValue = widget.units[0];
-      _toValue = widget.units[1];
+      _fromValue = widget.category.units[0];
+      _toValue = widget.category.units[1];
     });
+  }
+//
+  String _format(double conversion) {
+    var outputNum = conversion.toStringAsPrecision(7);
+    if (outputNum.contains('.') && outputNum.endsWith('0')) {
+      var i = outputNum.length - 1;
+      while (outputNum[i] == '0') {
+        i -= 1;
+      }
+      outputNum = outputNum.substring(0, i + 1);
+    }
+    if (outputNum.endsWith('.')) {
+      return outputNum.substring(0, outputNum.length - 1);
+    }
+    return outputNum;
   }
 
   void _updateConversion() {
@@ -74,7 +100,7 @@ class _ConverterPageRouteState extends State<ConverterPageRoute> {
   void _updateInputValue(String input) {
     setState(() {
       if (input == null || input.isEmpty) {
-        _convertedValue = "";
+        _convertedValue = '';
       } else {
         try {
           final inputDouble = double.parse(input);
@@ -82,35 +108,39 @@ class _ConverterPageRouteState extends State<ConverterPageRoute> {
           _inputValue = inputDouble;
           _updateConversion();
         } on Exception catch (e) {
-          print("Error: $e");
+          print('Error: $e');
           _showValidationError = true;
         }
       }
     });
   }
 
-  String _format(double conversion) {
-    var outputNum = conversion.toStringAsPrecision(7);
-    if (outputNum.contains(".") && outputNum.endsWith("0")) {
-      var i = outputNum.length - 1;
-      while (outputNum[i] == "0") {
-        i -= 1;
-      }
-      outputNum = outputNum.substring(0, i + 1);
+  void _updateFromConversion(dynamic unitName) {
+    setState(() {
+      _fromValue = _getUnit(unitName);
+    });
+    if (_inputValue != null) {
+      _updateConversion();
     }
-    if (outputNum.endsWith(".")) {
-      return outputNum.substring(0, outputNum.length - 1);
-    }
-    return outputNum;
   }
-
+//
+  void _updateToConversion(dynamic unitName) {
+    setState(() {
+      _toValue = _getUnit(unitName);
+    });
+    if (_inputValue != null) {
+      _updateConversion();
+    }
+  }
+//
   Widget _createDropdown(String currentValue, ValueChanged<dynamic> onChanged) {
     return Container(
       margin: EdgeInsets.only(top: 16.0),
       decoration: BoxDecoration(
         color: Colors.grey[50],
         border: Border.all(
-          color: Colors.grey[400],
+          // TODO: バージョンアップによる影響
+          // color: Colors.grey[400],
           width: 1.0,
         ),
       ),
@@ -134,33 +164,6 @@ class _ConverterPageRouteState extends State<ConverterPageRoute> {
     );
   }
 
-  Unit _getUnit(String unitName) {
-    return widget.units.firstWhere(
-        (Unit unit) {
-          return unit.name == unitName;
-        },
-      orElse: null,
-    );
-  }
-
-  void _updateFromConversion(dynamic unitName) {
-    setState(() {
-      _fromValue = _getUnit(unitName);
-    });
-    if (_inputValue != null) {
-      _updateConversion();
-    }
-  }
-
-  void _updateToConversion(dynamic unitName) {
-    setState(() {
-      _toValue = _getUnit(unitName);
-    });
-    if (_inputValue != null) {
-      _updateConversion();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final input = Padding(
@@ -172,8 +175,8 @@ class _ConverterPageRouteState extends State<ConverterPageRoute> {
             style: Theme.of(context).textTheme.headline4,
             decoration: InputDecoration(
               labelStyle: Theme.of(context).textTheme.headline4,
-              errorText: _showValidationError ? "Invalid number entered" : null,
-              labelText: "Input",
+              errorText: _showValidationError ? 'Invalid number entered' : null,
+              labelText: 'Input',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(0.0),
               ),
@@ -205,7 +208,7 @@ class _ConverterPageRouteState extends State<ConverterPageRoute> {
               style: Theme.of(context).textTheme.headline4,
             ),
             decoration: InputDecoration(
-              labelText: "Output",
+              labelText: 'Output',
               labelStyle: Theme.of(context).textTheme.headline4,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(0.0),
@@ -217,31 +220,19 @@ class _ConverterPageRouteState extends State<ConverterPageRoute> {
       ),
     );
 
+
     final converter = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
+      children: [
         input,
         arrows,
         output,
       ],
     );
 
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 1.0,
-        title: Text(
-          widget.name,
-          style: Theme.of(context).textTheme.headline4,
-        ),
-        centerTitle: true,
-        backgroundColor: widget.color,
-      ),
-      body: Padding(
-        padding: _padding,
-        child: converter,
-      ),
-      // This prevents the attempt to resize the screen when the keyboard is opened
-      resizeToAvoidBottomInset: false,
+    return Padding(
+      padding: _padding,
+      child: converter,
     );
   }
 }
