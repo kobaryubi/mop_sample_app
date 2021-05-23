@@ -44,6 +44,7 @@ class _GestureRouteState extends State<GestureRoute> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   GestureDetector(
+                    behavior: HitTestBehavior.deferToChild,
                     onTap: () {
                       setState(() {
                         _lights = !_lights;
