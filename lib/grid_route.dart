@@ -25,6 +25,7 @@ class _GridRouteState extends State<GridRoute> {
           child: GridView.count(
             crossAxisCount: 4,
             mainAxisSpacing: 10,
+            childAspectRatio: 3.0,
             children: <Widget>[
               Container(child: Text('100'), color: Colors.teal[100],),
               Container(child: Text('200'), color: Colors.teal[200],),
