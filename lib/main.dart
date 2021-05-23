@@ -4,6 +4,7 @@ import './category_route.dart';
 import './animation_route.dart';
 import './gesture_route.dart';
 import './logger_route.dart';
+import './grid_route.dart';
 
 void main() {
   runApp(MopSampleApp());
@@ -100,6 +101,16 @@ class _HelloPageRouteState extends State<HelloPageRoute> {
                   ),
                 ],
               ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: onGridRoutePressed,
+                      child: Text('Grid Route'),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
@@ -139,6 +150,15 @@ class _HelloPageRouteState extends State<HelloPageRoute> {
       context,
       MaterialPageRoute(
         builder: (context) => LoggerRoute(),
+      ),
+    );
+  }
+
+  Future<void> onGridRoutePressed() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => GridRoute(),
       ),
     );
   }
