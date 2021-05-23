@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import './category_route.dart';
 import './animation_route.dart';
 import './gesture_route.dart';
+import './logger_route.dart';
 
 void main() {
   runApp(MopSampleApp());
@@ -89,6 +90,16 @@ class _HelloPageRouteState extends State<HelloPageRoute> {
                   ),
                 ],
               ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: onLoggerRoutePressed,
+                      child: Text('Logger Route'),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
@@ -119,6 +130,15 @@ class _HelloPageRouteState extends State<HelloPageRoute> {
       context,
       MaterialPageRoute(
         builder: (context) => GestureRoute(),
+      ),
+    );
+  }
+
+  Future<void> onLoggerRoutePressed() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LoggerRoute(),
       ),
     );
   }
