@@ -22,7 +22,18 @@ class _GridRouteState extends State<GridRoute> {
       body: Center(
         child: Container(
           color: Colors.white,
-          child: Text('Grid'),
+          child: GridView.count(
+            crossAxisCount: 4,
+            mainAxisSpacing: 10,
+            children: <Widget>[
+              Container(child: Text('100'), color: Colors.teal[100],),
+              Container(child: Text('200'), color: Colors.teal[200],),
+              Container(child: Text('300'), color: Colors.teal[300],),
+              Container(child: Text('400'), color: Colors.teal[400],),
+              Container(child: Text('500'), color: Colors.teal[500],),
+              Container(child: Text('600'), color: Colors.teal[600],),
+            ],
+          ),
         ),
       ),
     );
