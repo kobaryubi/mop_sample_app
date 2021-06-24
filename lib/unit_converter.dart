@@ -10,8 +10,9 @@ class UnitConverter extends StatefulWidget {
   final Category category;
 
   const UnitConverter({
+    Key? key,
     required this.category,
-  }) : assert(category != null);
+  }) : super(key: key);
 
   @override
   _UnitConverterState createState() => _UnitConverterState();
@@ -24,21 +25,13 @@ class _UnitConverterState extends State<UnitConverter> {
   String _convertedValue = '';
   late List<DropdownMenuItem> _unitMenuItems;
   bool _showValidationError = false;
+  final _inputKey = GlobalKey(debugLabel: 'inputText');
 
   @override
   void initState() {
     super.initState();
     _createDropdownMenuItems();
     _setDefaults();
-  }
-
-  Unit _getUnit(String unitName) {
-    return widget.category.units.firstWhere(
-          (Unit unit) {
-        return unit.name == unitName;
-      },
-      orElse: null,
-    );
   }
 
   @override
@@ -73,8 +66,9 @@ class _UnitConverterState extends State<UnitConverter> {
       _fromValue = widget.category.units[0];
       _toValue = widget.category.units[1];
     });
+    _updateConversion();
   }
-//
+
   String _format(double conversion) {
     var outputNum = conversion.toStringAsPrecision(7);
     if (outputNum.contains('.') && outputNum.endsWith('0')) {
@@ -99,7 +93,7 @@ class _UnitConverterState extends State<UnitConverter> {
 
   void _updateInputValue(String input) {
     setState(() {
-      if (input == null || input.isEmpty) {
+      if (input.isEmpty) {
         _convertedValue = '';
       } else {
         try {
@@ -115,22 +109,27 @@ class _UnitConverterState extends State<UnitConverter> {
     });
   }
 
+  Unit _getUnit(String unitName) {
+    return widget.category.units.firstWhere(
+          (Unit unit) {
+        return unit.name == unitName;
+      },
+      orElse: null,
+    );
+  }
+
   void _updateFromConversion(dynamic unitName) {
     setState(() {
       _fromValue = _getUnit(unitName);
     });
-    if (_inputValue != null) {
-      _updateConversion();
-    }
+    _updateConversion();
   }
-//
+
   void _updateToConversion(dynamic unitName) {
     setState(() {
       _toValue = _getUnit(unitName);
     });
-    if (_inputValue != null) {
-      _updateConversion();
-    }
+    _updateConversion();
   }
 //
   Widget _createDropdown(String currentValue, ValueChanged<dynamic> onChanged) {
@@ -139,8 +138,6 @@ class _UnitConverterState extends State<UnitConverter> {
       decoration: BoxDecoration(
         color: Colors.grey[50],
         border: Border.all(
-          // TODO: バージョンアップによる影響
-          // color: Colors.grey[400],
           width: 1.0,
         ),
       ),
@@ -172,6 +169,7 @@ class _UnitConverterState extends State<UnitConverter> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           TextField(
+            key: _inputKey,
             style: Theme.of(context).textTheme.headline4,
             decoration: InputDecoration(
               labelStyle: Theme.of(context).textTheme.headline4,
@@ -221,8 +219,7 @@ class _UnitConverterState extends State<UnitConverter> {
     );
 
 
-    final converter = Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    final converter = ListView(
       children: [
         input,
         arrows,
@@ -232,7 +229,20 @@ class _UnitConverterState extends State<UnitConverter> {
 
     return Padding(
       padding: _padding,
-      child: converter,
+      child: OrientationBuilder(
+        builder: (BuildContext context, Orientation orientation) {
+          if (orientation == Orientation.portrait) {
+            return converter;
+          } else {
+            return Center(
+              child: Container(
+                width: 450.0,
+                child: converter,
+              ),
+            );
+          }
+        },
+      ),
     );
   }
 }
